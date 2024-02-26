@@ -2,32 +2,25 @@
 PRAGMA table_info(ksprojects);
 
 --pull the relevant columns
-SELECT main_category,
-				 goal,
-				 backers,
-				 pledged
+SELECT main_category, goal, backers, pledged
   FROM ksprojects
  LIMIT 10;
  
  --only keep the records where the project state is either 'failed', 'canceled', or 'suspended'.
- SELECT main_category,
-				 goal,
-				 backers,
-				 pledged
+SELECT main_category, goal, backers, pledged
   FROM ksprojects
  WHERE state IN ('failed', 'canceled', 'suspended')
  LIMIT 10;
  
  --find which of these projects had at least 100 backers and at least $20,000 pledged
- SELECT main_category, backers, pledged, goal
- FROM ksprojects
-WHERE state IN ('failed', 'canceled', 'suspended')
-      AND backers &gt;= 100 AND pledged &gt;= 20000
-LIMIT 10;
+SELECT main_category, backers, pledged, goal
+  FROM ksprojects
+ WHERE state IN ('failed', 'canceled', 'suspended')
+   AND backers &gt;= 100 AND pledged &gt;= 20000
+ LIMIT 10;
 
 --the product team would like to view projects by categories, along with the percentage of the goal that was funded
-SELECT main_category, backers, pledged, goal,
-       pledged/goal AS pct_pledged
+SELECT main_category, backers, pledged, goal, pledged/goal AS pct_pledged
   FROM ksprojects
  WHERE state IN ('failed')
    AND backers &gt;= 100 AND pledged &gt;= 20000
@@ -35,16 +28,14 @@ SELECT main_category, backers, pledged, goal,
  LIMIT 10;
  
  --are these failed projects failing because they don't have any backers or funding?
-   SELECT 	main_category, backers, pledged, goal,
-						pledged / goal AS pct_pledged,
-        CASE
-     WHEN 	pledged/goal &gt;= 1 THEN 'Fully funded'
-     WHEN	    pledged/goal BETWEEN .75 AND 1 THEN 'Nearly funded'
-       ELSE 		'Not nearly funded'
-         END 	AS funding_status
-     FROM	    ksprojects
- WHERE 		state IN ('failed')
-        AND 		backers &gt;= 100 AND pledged &gt;= 20000
-ORDER BY  main_category, pct_pledged DESC
-   LIMIT 	   10;
+SELECT main_category, backers, pledged, goal, pledged / goal AS pct_pledged,
+	  CASE WHEN pledged/goal &gt;= 1 THEN 'Fully funded'
+     	  WHEN pledged/goal BETWEEN .75 AND 1 THEN 'Nearly funded'
+	  ELSE 'Not nearly funded'
+          END  AS funding_status
+  FROM ksprojects
+ WHERE state IN ('failed')
+   AND backers &gt;= 100 AND pledged &gt;= 20000
+ ORDER BY main_category, pct_pledged DESC
+ LIMIT 10;
 </sql><current_tab id="0"/></tab_sql></sqlb_project>
